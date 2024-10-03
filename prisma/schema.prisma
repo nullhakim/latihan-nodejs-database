@@ -19,10 +19,48 @@ model sample {
 }
 
 model Customer {
-  id    String @id
-  name  String
-  email String @unique
-  phone String @unique
+  id      String    @id @db.VarChar(100)
+  name    String
+  email   String    @unique
+  phone   String    @unique
+  wallet  Wallet?
+  comment Comment[]
 
   @@map("customers")
+}
+
+model Comment {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  customer_id String
+  customer    Customer @relation(fields: [customer_id], references: [id])
+
+  @@map("comments")
+}
+
+model Wallet {
+  id          String   @id @db.VarChar(100)
+  balance     Int
+  customer    Customer @relation(fields: [customer_id], references: [id])
+  customer_id String   @unique
+
+  @@map("wallet")
+}
+
+model Product {
+  id       String @id @db.VarChar(100)
+  name     String
+  price    Int
+  stock    Int
+  category String
+
+  @@map("products")
+}
+
+model Category {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  @@map("categories")
 }
